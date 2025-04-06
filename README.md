@@ -42,15 +42,11 @@ python app.py
 1. Select your preferred language from the dropdown menu.
 2. Type your question in the text box or use the voice input button to speak your question.
 3. Click the "Ask" button to get a response.
-4. Use the "Speak" button next to each bot response to listen to it.
-5. Use the feature buttons to quickly access common information like weather, market prices, etc.
 
 ## Technologies Used
 
 - Flask: Web framework
 - OpenAI API: For generating responses
-- SpeechRecognition: For converting speech to text
-- gTTS (Google Text-to-Speech): For converting text to speech
 - HTML/CSS/JavaScript: For the frontend interface
 
 ## Contributing
