@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="{{ selected_lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ ui_text.title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .chat-container {
+            margin-top: 20px;
+        }
+        .chat-box {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .user-message {
+            background-color: #e1f5fe;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .bot-message {
+            background-color: #f1f8e9;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        form {
+            display: flex;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .clear-btn {
+            background-color: #f44336;
+            margin-top: 10px;
+        }
+        .clear-btn:hover {
+            background-color: #d32f2f;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .language-info {
+            background-color: #e8f5e9;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+        .language-info h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .language-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        .language-tag {
+            background-color: #c8e6c9;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+        }
+        .language-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .language-selector select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            margin-right: 10px;
+            font-size: 1em;
+        }
+        .language-selector button {
+            padding: 8px 15px;
+        }
+        .suggestions {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .suggestion-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        .suggestion-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .suggestion-item {
+            background-color: #f0f7ff;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .suggestion-item:hover {
+            background-color: #d0e7ff;
+        }
+        .suggestion-category {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ ui_text.title }}</h1>
+        
+        <div class="language-selector">
+            <form action="/set_language" method="post">
+                <select name="language" id="language">
+                    <option value="en" {% if selected_lang == 'en' %}selected{% endif %}>English</option>
+                    {% for code, name in languages.items() %}
+                        <option value="{{ code }}" {% if selected_lang == code %}selected{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Change Language</button>
+            </form>
+        </div>
+        
+        <div class="language-info">
+            <h3>🌐 {{ ui_text.multi_language }}</h3>
+            <p>{{ ui_text.language_support }}</p>
+            <div class="language-list">
+                <span class="language-tag">English</span>
+                {% for code, name in languages.items() %}
+                    <span class="language-tag">{{ name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="suggestions">
+            <div class="suggestion-title">{{ ui_text.suggested_questions }}</div>
+            <div class="suggestion-category">{{ ui_text.crops_farming }}</div>
+            <div class="suggestion-list">
+                <div class="suggestion-item" data-question="{{ ui_text.top_crops }}">{{ ui_text.top_crops }}</div>
+                <div class="suggestion-item" data-question="{{ ui_text.organic_farming }}">{{ ui_text.organic_farming }}</div>
+                <div class="suggestion-item" data-question="{{ ui_text.increase_yield }}">{{ ui_text.increase_yield }}</div>
+                <div class="suggestion-item" data-question="{{ ui_text.rice_pests }}">{{ ui_text.rice_pests }}</div>
+            </div>
+            
+            <div class="suggestion-category">{{ ui_text.weather_climate }}</div>
+            <div class="suggestion-list">
+                <div class="suggestion-item" data-question="{{ ui_text.climate_change }}">{{ ui_text.climate_change }}</div>
+                <div class="suggestion-item" data-question="{{ ui_text.monsoon_crops }}">{{ ui_text.monsoon_crops }}</div>
+                <div class="suggestion-item" data-question="{{ ui_text.protect_crops }}">{{ ui_text.protect_crops }}</div>
+            </div>
+            
+            <div class="suggestion-category">{{ ui_text.government_support }}</div>
+            <div class="suggestion-list">
+                <div class="suggestion-item" data-question="{{ ui_text.small_farmers }}">{{ ui_text.small_farmers }}</div>
+                <div class="suggestion-item" data-question="{{ ui_text.agricultural_loans }}">{{ ui_text.agricultural_loans }}</div>
+                <div class="suggestion-item" data-question="{{ ui_text.farming_equipment }}">{{ ui_text.farming_equipment }}</div>
+            </div>
+            
+            <div class="suggestion-category">{{ ui_text.technology_innovation }}</div>
+            <div class="suggestion-list">
+                <div class="suggestion-item" data-question="{{ ui_text.mobile_apps }}">{{ ui_text.mobile_apps }}</div>
+                <div class="suggestion-item" data-question="{{ ui_text.precision_farming }}">{{ ui_text.precision_farming }}</div>
+                <div class="suggestion-item" data-question="{{ ui_text.drip_irrigation }}">{{ ui_text.drip_irrigation }}</div>
+            </div>
+        </div>
+        
+        <div class="chat-container">
+            <div class="chat-box" id="chat-box">
+                {% if conversation %}
+                    {% for exchange in conversation %}
+                        <div class="user-message">
+                            <strong>{{ ui_text.you }}:</strong> {{ exchange.user }}
+                        </div>
+                        <div class="bot-message">
+                            <strong>{{ ui_text.bot }}:</strong> {{ exchange.bot }}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>{{ ui_text.welcome }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="controls">
+                <form action="/ask" method="post" id="question-form" style="flex: 1; margin-right: 10px;">
+                    <input type="text" name="question" id="question-input" placeholder="{{ ui_text.type_question }}" required>
+                    <button type="submit">{{ ui_text.ask_button }}</button>
+                </form>
+                
+                <form action="/clear" method="post">
+                    <button type="submit" class="clear-btn">{{ ui_text.clear_chat }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Suggestion items functionality
+        const suggestionItems = document.querySelectorAll('.suggestion-item');
+        const questionInput = document.getElementById('question-input');
+        const questionForm = document.getElementById('question-form');
+        
+        suggestionItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const question = item.getAttribute('data-question');
+                questionInput.value = question;
+                
+                // Automatically submit the form when a suggestion is clicked
+                questionForm.submit();
+            });
+        });
+        
+        // Scroll to bottom of chat box when new messages are added
+        function scrollToBottom() {
+            const chatBox = document.getElementById('chat-box');
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        
+        // Call scrollToBottom when the page loads
+        window.onload = scrollToBottom;
+        
+        function showLoadingIndicator() {
+            const chatBox = document.getElementById('chat-box');
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = 'loading-indicator';
+            loadingDiv.className = 'loading-indicator';
+            loadingDiv.innerHTML = 'Thinking...';
+            chatBox.appendChild(loadingDiv);
+            scrollToBottom();
+        }
+        
+        function hideLoadingIndicator() {
+            const loadingIndicator = document.getElementById('loading-indicator');
+            if (loadingIndicator) {
+                loadingIndicator.remove();
+            }
+        }
+        
+        // Modify form submission
+        questionForm.addEventListener('submit', function(e) {
+            showLoadingIndicator();
+        });
+    </script>
+</body>
+</html> 
